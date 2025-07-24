@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +13,28 @@
       overflow-x: hidden;
       position: relative;
     }
+    #overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #0d0d0d;
+      color: #b347f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 26px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 9999;
+      transition: opacity 0.6s ease;
+    }
+    #overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
     .container {
+      display: none;
       max-width: 380px;
       margin: 30px auto;
       background: rgba(20, 20, 20, 0.9);
@@ -25,6 +45,9 @@
       box-shadow: 0 0 10px #b347f0;
       position: relative;
       z-index: 1;
+    }
+    .show {
+      display: block !important;
     }
     .profile-img {
       width: 80px;
@@ -105,11 +128,15 @@
 
 <canvas id="stars"></canvas>
 
-<div class="container">
+<!-- Overlay -->
+<div id="overlay">Click to See</div>
+
+<!-- Profile Container -->
+<div class="container" id="mainContent">
   <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnc3bGt2b2lxM2o3NTNjdnk0bXZ1aG4xOHV0M2YxaTN0bmI1OXl3ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Nzx5WVClM1apfC5hj3/giphy.gif" alt="Profile Image" class="profile-img" />
   <h1>! Mafi !</h1>
   <p>Hi, I'm Mafi — I build websites, create tools, and love Game Hacking. Let's connect!</p>
-  
+
   <a href="https://discord.gg/t667NFGfYk" class="link-btn" target="_blank">Join My Discord</a>
   <a href="https://discord.com/users/1350771820902617109" class="link-btn" target="_blank">Message Me</a>
   <a href="https://youtube.com/@crimezone-k2m?si=RAG_yozpbRH6bc1P" class="link-btn" target="_blank">My YouTube</a>
@@ -129,6 +156,12 @@
   <footer>© Made By Mafi !</footer>
 </div>
 
+<!-- Audio -->
+<audio id="bg-music">
+  <source src="bg-music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Stars Canvas -->
 <script>
   const canvas = document.getElementById('stars');
   const ctx = canvas.getContext('2d');
@@ -184,23 +217,23 @@
   draw();
 </script>
 
-<!-- 🔊 Background Music -->
-<audio id="bg-music" autoplay loop muted>
-  <source src="bg-music.mp3" type="audio/mpeg">
-</audio>
-
+<!-- Click Handler -->
 <script>
-  window.addEventListener('load', () => {
-    const audio = document.getElementById('bg-music');
-    setTimeout(() => {
-      audio.muted = false;
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(err => {
-          console.log("Autoplay with sound blocked by browser. User interaction needed.");
-        });
-      }
-    }, 1000); // delay for autoplay permission
+  document.getElementById("overlay").addEventListener("click", () => {
+    // Hide overlay
+    document.getElementById("overlay").classList.add("hidden");
+
+    // Show profile
+    document.getElementById("mainContent").classList.add("show");
+
+    // Play music
+    const audio = document.getElementById("bg-music");
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(err => {
+        console.log("Autoplay blocked, manual click required.");
+      });
+    }
   });
 </script>
 
